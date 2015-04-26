@@ -1,16 +1,16 @@
-var hostname = require('os').hostname()
+import {hostname as osHostname} from 'os'
+import express from 'express'
+import morgan from 'morgan'
 
-var express = require('express')
-var morgan = require('morgan')
-
-var app = express()
+const hostname = osHostname()
+const app = express()
 
 app.use(morgan('combined'))
 
-app.get('/', function (req, res) {
-  res.send('Hello World! (' + hostname + ')\n')
+app.get('/', (req, res) => {
+  res.send(`Hello World! (${hostname})\n`)
 })
 
-app.listen(5000, function () {
-  console.log('Listening on port 5000 (%s)', hostname)
+app.listen(5000, () => {
+  console.log(`Listening on port 5000 (${hostname})`)
 })
