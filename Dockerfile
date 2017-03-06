@@ -1,14 +1,9 @@
-FROM mhart/alpine-iojs:latest
+FROM scratch
 
 MAINTAINER Christoph Witzko <docker@christophwitzko.com>
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-COPY package.json /usr/src/app/
-RUN npm install --production
-COPY . /usr/src/app
+COPY hello-hostname /
 
 EXPOSE 5000
 
-CMD ["npm", "start"]
+ENTRYPOINT ["/hello-hostname"]
