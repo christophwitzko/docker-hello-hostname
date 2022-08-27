@@ -14,13 +14,19 @@ func logger(server http.Handler) http.Handler {
 	})
 }
 
-var hostname, _ = os.Hostname()
-
 func main() {
+	hostname, err := os.Hostname()
+	if err != nil {
+		log.Fatal(err)
+	}
+	bindAddr := ":5000"
+	if port := os.Getenv("PORT"); port != "" {
+		bindAddr = ":" + port
+	}
 	server := http.NewServeMux()
 	server.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Hello World! (%s)\n", hostname)
 	})
-	log.Println("starting server on port 5000...")
-	log.Fatal(http.ListenAndServe(":5000", logger(server)))
+	log.Printf("starting server on port %s...", bindAddr)
+	log.Fatal(http.ListenAndServe(bindAddr, logger(server)))
 }

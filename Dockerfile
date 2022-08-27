@@ -1,9 +1,12 @@
-FROM scratch
+FROM golang:1.19-alpine as builder
 
-MAINTAINER Christoph Witzko <docker@christophwitzko.com>
+WORKDIR /app
+COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w -extldflags '-static'"
 
-COPY hello-hostname /
+FROM alpine
 
+COPY --from=builder /app/hello-hostname /app/hello-hostname
 EXPOSE 5000
 
-ENTRYPOINT ["/hello-hostname"]
+ENTRYPOINT ["/app/hello-hostname"]
